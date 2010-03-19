@@ -224,7 +224,7 @@ bool SciTEWin::OpenDialog(FilePath directory, const GUI::gui_char *filter) {
 	GUI::gui_string translatedTitle = localiser.Text("Open File");
 	ofn.lpstrTitle = translatedTitle.c_str();
 	if (props.GetInt("open.dialog.in.file.directory")) {
-		ofn.lpstrInitialDir = directory.AsFileSystem();
+		ofn.lpstrInitialDir = directory.AsInternal();
 	}
 	ofn.Flags = OFN_HIDEREADONLY;
 
@@ -260,7 +260,7 @@ FilePath SciTEWin::ChooseSaveName(FilePath directory, const char *title, const G
 		GUI::gui_char saveName[MAX_PATH] = GUI_TEXT("");
 		FilePath savePath = SaveName(ext);
 		if (!savePath.IsUntitled()) {
-			wcscpy(saveName, savePath.AsFileSystem());
+			wcscpy(saveName, savePath.AsInternal());
 		}
 		OPENFILENAMEW ofn = {
 		                       sizeof(ofn), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -273,7 +273,7 @@ FilePath SciTEWin::ChooseSaveName(FilePath directory, const char *title, const G
 		ofn.lpstrTitle = translatedTitle.c_str();
 		ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 		ofn.lpstrFilter = filter;
-		ofn.lpstrInitialDir = directory.AsFileSystem();
+		ofn.lpstrInitialDir = directory.AsInternal();
 
 		dialogsOnScreen++;
 		if (::GetSaveFileNameW(&ofn)) {

@@ -906,10 +906,10 @@ void SciTEBase::SaveIfNotOpen(const FilePath &destFile, bool fixCase) {
 	int index = buffers.GetDocumentByName(absPath, true /* excludeCurrent */);
 	if (index >= 0) {
 		GUI::gui_string msg = LocaliseMessage(
-			    "File '^0' is already open in another buffer.", destFile.AsFileSystem());
+			    "File '^0' is already open in another buffer.", destFile.AsInternal());
 		WindowMessageBox(wSciTE, msg, MB_OK | MB_ICONWARNING);
 	} else {
-		SaveAs(absPath.AsFileSystem(), fixCase);
+		SaveAs(absPath.AsInternal(), fixCase);
 	}
 }
 
@@ -1129,7 +1129,7 @@ void SciTEBase::GrepRecursive(GrepFlags gf, FilePath baseDir, const char *search
 	for (size_t i = 0; i < files.Length(); i ++) {
 		FilePath fPath = files.At(i);
 		if (fPath.Matches(gFileTypes.c_str())) {
-			//OutputAppendStringSynchronised(i->AsFileSystem());
+			//OutputAppendStringSynchronised(i->AsInternal());
 			//OutputAppendStringSynchronised("\n");
 			FileReader fr(fPath, gf & grepMatchCase);
 			if ((gf & grepBinary) || !fr.BufferContainsNull()) {

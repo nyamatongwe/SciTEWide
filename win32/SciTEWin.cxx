@@ -730,7 +730,7 @@ DWORD SciTEWin::ExecuteOne(const Job &jobToRun, bool &seenOutput) {
 			  TRUE, CREATE_NEW_PROCESS_GROUP,
 			  NULL,
 			  startDirectory.IsSet() ?
-			  startDirectory.AsFileSystem() : NULL,
+			  startDirectory.AsInternal() : NULL,
 			  &si, &pi);
 
 	if (running) {

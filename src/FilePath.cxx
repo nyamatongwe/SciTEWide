@@ -104,10 +104,6 @@ void FilePath::Set(const GUI::gui_char *fileName_) {
 	fileName = fileName_;
 }
 
-const GUI::gui_char *FilePath::AsFileSystem() const {
-	return AsInternal();
-}
-
 void FilePath::Set(FilePath const &other) {
 	fileName = other.fileName;
 }
@@ -430,7 +426,7 @@ FilePath FilePath::AbsolutePath() const {
 	GUI::gui_char absPath[2000];
 	absPath[0] = '\0';
 	GUI::gui_char *fileBit = 0;
-	::GetFullPathNameW(AsFileSystem(), sizeof(absPath)/sizeof(absPath[0]), absPath, &fileBit);
+	::GetFullPathNameW(AsInternal(), sizeof(absPath)/sizeof(absPath[0]), absPath, &fileBit);
 	return FilePath(absPath);
 #else
 	if (IsAbsolute()) {
@@ -459,7 +455,7 @@ FilePath FilePath::GetWorkingDirectory() {
 }
 
 bool FilePath::SetWorkingDirectory() const {
-	return chdir(AsFileSystem()) == 0;
+	return chdir(AsInternal()) == 0;
 }
 
 void FilePath::List(FilePathSet &directories, FilePathSet &files) {
@@ -467,7 +463,7 @@ void FilePath::List(FilePathSet &directories, FilePathSet &files) {
 	FilePath wildCard(*this, GUI_TEXT("*.*"));
 	bool complete = false;
 	WIN32_FIND_DATAW findFileData;
-	HANDLE hFind = ::FindFirstFileW(wildCard.AsFileSystem(), &findFileData);
+	HANDLE hFind = ::FindFirstFileW(wildCard.AsInternal(), &findFileData);
 	if (hFind != INVALID_HANDLE_VALUE) {
 		while (!complete) {
 			if ((strcmp(findFileData.cFileName, GUI_TEXT(".")) != 0) && (strcmp(findFileData.cFileName, GUI_TEXT("..")) != 0)) {
@@ -517,7 +513,7 @@ FILE *FilePath::Open(const GUI::gui_char *mode) const {
 }
 
 void FilePath::Remove() const {
-	unlink(AsFileSystem());
+	unlink(AsInternal());
 }
 
 #ifndef R_OK
@@ -528,7 +524,7 @@ void FilePath::Remove() const {
 time_t FilePath::ModifiedTime() const {
 	if (IsUntitled())
 		return 0;
-	if (access(AsFileSystem(), R_OK) == -1)
+	if (access(AsInternal(), R_OK) == -1)
 		return 0;
 #ifdef _WIN32
 #if defined(_MSC_VER) && (_MSC_VER > 1310)
@@ -539,7 +535,7 @@ time_t FilePath::ModifiedTime() const {
 #else
 	struct stat statusFile;
 #endif
-	if (stat(AsFileSystem(), &statusFile) != -1)
+	if (stat(AsInternal(), &statusFile) != -1)
 		return statusFile.st_mtime;
 	else
 		return 0;
@@ -581,7 +577,7 @@ bool FilePath::IsDirectory() const {
 #else
 	struct stat statusFile;
 #endif
-	if (stat(AsFileSystem(), &statusFile) != -1)
+	if (stat(AsInternal(), &statusFile) != -1)
 #ifdef WIN32
 		return statusFile.st_mode & _S_IFDIR;
 #else
@@ -737,7 +733,7 @@ void FilePath::FixName() {
 	// Only used on Windows to use long file names and fix the case of file names
 	GUI::gui_char longPath[_MAX_PATH];
 	// first try MakeLongPath which corrects the path and the case of filename too
-	if (MakeLongPath(AsFileSystem(), longPath)) {
+	if (MakeLongPath(AsInternal(), longPath)) {
 		Set(longPath);
 	} else {
 		// On Windows file comparison is done case insensitively so the user can
@@ -745,7 +741,7 @@ void FilePath::FixName() {
 		// is saved with correct capitalisation FindFirstFile is used to find out the
 		// real name of the file.
 		WIN32_FIND_DATAW FindFileData;
-		HANDLE hFind = ::FindFirstFileW(AsFileSystem(), &FindFileData);
+		HANDLE hFind = ::FindFirstFileW(AsInternal(), &FindFileData);
 		FilePath dir = Directory();
 		if (hFind != INVALID_HANDLE_VALUE) {	// FindFirstFile found the file
 			Set(dir, FindFileData.cFileName);
