@@ -421,7 +421,7 @@ protected:
 
 	virtual SString GetRangeInUIEncoding(GUI::ScintillaWindow &wCurrent, int selStart, int selEnd);
 
-	virtual int WindowMessageBox(GUI::Window &w, const SString &msg, int style);
+	virtual int WindowMessageBox(GUI::Window &w, const GUI::gui_string &msg, int style);
 	virtual void FindMessageBox(const SString &msg, const SString *findItem=0);
 	virtual void AboutDialog();
 	virtual void QuitProgram();
@@ -449,7 +449,7 @@ protected:
 	virtual FilePath GetSciteUserHome();
 
 	virtual void SetStatusBarText(const char *s);
-	virtual void TabInsert(int index, char *title);
+	virtual void TabInsert(int index, const GUI::gui_char *title);
 	virtual void TabSelect(int index);
 	virtual void RemoveAllTabs();
 	virtual void SetFileProperties(PropSetFile &ps);
@@ -761,7 +761,7 @@ void SciTEGTK::SetStatusBarText(const char *s) {
 	gtk_statusbar_push(GTK_STATUSBAR(PWidget(wStatusBar)), sbContextID, s);
 }
 
-void SciTEGTK::TabInsert(int index, char *title) {
+void SciTEGTK::TabInsert(int index, const GUI::gui_char *title) {
 	if (wTabBar.GetID()) {
 		GtkWidget *tablabel = gtk_label_new(title);
 		GtkWidget *tabcontent;
@@ -1124,7 +1124,7 @@ void SciTEGTK::OpenUriList(const char *list) {
 					unquote(uri);
 					Open(uri);
 				} else {
-					SString msg = LocaliseMessage("URI '^0' not understood.", uri);
+					GUI::gui_string msg = LocaliseMessage("URI '^0' not understood.", uri);
 					WindowMessageBox(wSciTE, msg, MB_OK | MB_ICONWARNING);
 				}
 
@@ -1171,7 +1171,7 @@ bool SciTEGTK::OpenDialog(FilePath directory, const char *filter) {
 			size_t start = 0;
 			while (start < openFilter.length()) {
 				const char *filterName = openFilter.c_str() + start;
-				SString localised = localiser.Text(filterName, false);
+				GUI::gui_string localised = localiser.Text(filterName, false);
 				if (localised.length()) {
 					openFilter.remove(start, strlen(filterName));
 					openFilter.insert(start, localised.c_str());
@@ -1404,10 +1404,10 @@ void SciTEGTK::TranslatedSetTitle(GtkWindow *w, const char *original) {
 }
 
 GtkWidget *SciTEGTK::TranslatedLabel(const char *original) {
-	SString text = localiser.Text(original);
+	GUI::gui_string text = localiser.Text(original);
 	// Don't know how to make an access key on a label transfer focus
 	// to the next widget so remove the access key indicator.
-	text.remove("_");
+	substitute(text, "_", "");
 	return gtk_label_new(text.c_str());
 }
 
@@ -2141,8 +2141,9 @@ void SciTEGTK::DestroyFindReplace() {
 	dlgFindReplace.Destroy();
 }
 
-int SciTEGTK::WindowMessageBox(GUI::Window &w, const SString &msg, int style) {
+int SciTEGTK::WindowMessageBox(GUI::Window &w, const GUI::gui_string &msg, int style) {
 	if (!messageBoxDialog) {
+		SString sMsg(msg.c_str());
 		dialogsOnScreen++;
 		GtkAccelGroup *accel_group = gtk_accel_group_new();
 
@@ -2181,7 +2182,7 @@ int SciTEGTK::WindowMessageBox(GUI::Window &w, const SString &msg, int style) {
 			gtk_widget_show_all(explanation);
 			SetAboutMessage(scExplanation, "SciTE");
 		} else {
-			GtkWidget *label = gtk_label_new(msg.c_str());
+			GtkWidget *label = gtk_label_new(sMsg.c_str());
 			gtk_misc_set_padding(GTK_MISC(label), 10, 10);
 			gtk_box_pack_start(GTK_BOX(GTK_DIALOG(messageBoxDialog)->vbox),
 			                   label, TRUE, TRUE, 0);
@@ -2205,16 +2206,16 @@ int SciTEGTK::WindowMessageBox(GUI::Window &w, const SString &msg, int style) {
 
 void SciTEGTK::FindMessageBox(const SString &msg, const SString *findItem) {
 	if (findItem == 0) {
-		SString msgBuf = LocaliseMessage(msg.c_str());
+		GUI::gui_string msgBuf = LocaliseMessage(msg.c_str());
 		WindowMessageBox(wSciTE, msgBuf, MB_OK | MB_ICONWARNING);
 	} else {
-		SString msgBuf = LocaliseMessage(msg.c_str(), findItem->c_str());
+		GUI::gui_string msgBuf = LocaliseMessage(msg.c_str(), findItem->c_str());
 		WindowMessageBox(wSciTE, msgBuf, MB_OK | MB_ICONWARNING);
 	}
 }
 
 void SciTEGTK::AboutDialog() {
-	WindowMessageBox(wSciTE, "SciTE\nby Neil Hodgson neilh@scintilla.org .",
+	WindowMessageBox(wSciTE, GUI::gui_string("SciTE\nby Neil Hodgson neilh@scintilla.org ."),
 	                 MB_OK | MB_ABOUTBOX);
 }
 
@@ -2363,7 +2364,7 @@ gint SciTEGTK::Key(GdkEventKey *event) {
 }
 
 void SciTEGTK::AddToPopUp(const char *label, int cmd, bool enabled) {
-	SString localised = localiser.Text(label);
+	GUI::gui_string localised = localiser.Text(label);
 	localised.insert(0, "/");
 	GtkItemFactoryEntry itemEntry = {
 		const_cast<char *>(localised.c_str()), NULL,
@@ -2690,8 +2691,8 @@ SString SciTEGTK::TranslatePath(const char *path) {
 		int end = spath.search("/");
 		while (spath.length() > 1) {
 			SString segment(spath.c_str(), 0, end);
-			SString segmentLocalised = localiser.Text(segment.c_str());
-			segmentLocalised.substitute("/", "|");
+			GUI::gui_string segmentLocalised = localiser.Text(segment.c_str());
+			substitute(segmentLocalised, "/", "|");
 			spathTranslated.append("/");
 			spathTranslated.append(segmentLocalised.c_str());
 			spath.remove(0, end + 1);
