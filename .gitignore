@@ -1,0 +1,12 @@
+*.obj
+*.o
+*.a
+*.sbr
+*.bsc
+*.exe
+*.pdb
+*.exp
+*.ilk
+*.idb
+*.pdb
+*.ncb
