@@ -74,7 +74,7 @@
 #ifdef unix
 const GUI::gui_char propUserFileName[] = GUI_TEXT(".SciTEUser.properties");
 #else
-// Windows or VMS
+// Windows
 const GUI::gui_char propUserFileName[] = GUI_TEXT("SciTEUser.properties");
 #endif
 const GUI::gui_char propGlobalFileName[] = GUI_TEXT("SciTEGlobal.properties");
@@ -417,9 +417,6 @@ bool SciTEBase::PreOpenCheck(const char *) {
 bool SciTEBase::Open(FilePath file, OpenFlags of) {
 	InitialiseBuffers();
 
-#ifdef __vms
-	file = file.VMSToUnixStyle();
-#endif
 	FilePath absPath = file.AbsolutePath();
 	int index = buffers.GetDocumentByName(absPath);
 	if (index >= 0) {

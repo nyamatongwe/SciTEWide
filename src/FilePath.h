@@ -44,9 +44,6 @@ public:
 	FilePath(const GUI::gui_string &fileName_);
 	FilePath(FilePath const &directory, FilePath const &name);
 	void Set(const GUI::gui_char *fileName_);
-#ifdef __vms
-	FilePath VMSToUnixStyle();
-#endif
 	void Set(FilePath const &other);
 	void Set(FilePath const &directory, FilePath const &name);
 	void SetDirectory(FilePath directory);

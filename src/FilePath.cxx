@@ -74,14 +74,6 @@ const GUI::gui_char configFileVisibilityString[] = ".";
 const GUI::gui_char fileRead[] = "rb";
 const GUI::gui_char fileWrite[] = "wb";
 #endif
-#ifdef __vms
-const GUI::gui_char pathSepString[] = "/";
-const GUI::gui_char pathSepChar = '/';
-const GUI::gui_char listSepString[] = ":";
-const GUI::gui_char configFileVisibilityString[] = "";
-const GUI::gui_char fileRead[] = "r";
-const GUI::gui_char fileWrite[] = "w";
-#endif
 #ifdef WIN32
 // Windows
 const GUI::gui_char pathSepString[] = GUI_TEXT("\\");
@@ -154,10 +146,6 @@ bool FilePath::IsAbsolute() const {
 	if (fileName.length() == 0)
 		return false;
 #ifdef unix
-	if (fileName[0] == '/')
-		return true;
-#endif
-#ifdef __vms
 	if (fileName[0] == '/')
 		return true;
 #endif
@@ -359,66 +347,6 @@ FilePath FilePath::NormalizePath() const {
 	return ret;
 }
 
-#ifdef __vms
-
-FilePath FilePath::VMSToUnixStyle() {
-	// possible formats:
-	// o disk:[dir.dir]file.type
-	// o logical:file.type
-	// o [dir.dir]file.type
-	// o file.type
-	// o /disk//dir/dir/file.type
-	// o /disk/dir/dir/file.type
-
-	char unixStyleFileName[MAX_PATH + 20];
-	const char *vmsName = FullPath();
-
-	if (strchr(vmsName, ':') == NULL && strchr(vmsName, '[') == NULL) {
-		// o file.type
-		// o /disk//dir/dir/file.type
-		// o /disk/dir/dir/file.type
-		if (strstr (vmsName, "//") == NULL) {
-			return FilePath(vmsName);
-		}
-		strcpy(unixStyleFileName, vmsName);
-		char *p;
-		while ((p = strstr (unixStyleFileName, "//")) != NULL) {
-			strcpy (p, p + 1);
-		}
-		return FilePath(unixStyleFileName);
-	}
-
-	// o disk:[dir.dir]file.type
-	// o logical:file.type
-	// o [dir.dir]file.type
-
-	if (vmsName [0] == '/') {
-		strcpy(unixStyleFileName, vmsName);
-	} else {
-		unixStyleFileName [0] = '/';
-		strcpy(unixStyleFileName + 1, vmsName);
-		char *p = strstr(unixStyleFileName, ":[");
-		if (p == NULL) {
-			// o logical:file.type
-			p = strchr(unixStyleFileName, ':');
-			*p = '/';
-		} else {
-			*p = '/';
-			strcpy(p + 1, p + 2);
-			char *end = strchr(unixStyleFileName, ']');
-			if (*end != NULL) {
-				*end = '/';
-			}
-			while (p = strchr(unixStyleFileName, '.'), p != NULL && p < end) {
-				*p = '/';
-			}
-		}
-	}
-	return FilePath(unixStyleFileName);
-} // VMSToUnixStyle
-
-#endif
-
 /**
  * Take a filename or relative path and put it at the end of the current path.
  * If the path is absolute, return the same path.
@@ -602,7 +530,7 @@ void Lowercase(GUI::gui_string &s) {
 #endif
 
 static bool EndMatches(GUI::gui_string const &s, GUI::gui_string const &end) {
-	return (s.size() >= end.size()) && 
+	return (s.size() >= end.size()) &&
 		(std::equal(s.begin() + s.size() - end.size(), s.end(), end.begin()));
 }
 
