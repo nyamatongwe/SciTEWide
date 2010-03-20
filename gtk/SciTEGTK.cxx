@@ -15,6 +15,7 @@
 
 #include <string>
 #include <map>
+#include <algorithm>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
