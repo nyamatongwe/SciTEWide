@@ -145,15 +145,6 @@ bool FilePath::IsSet() const {
 	return fileName.length() > 0;
 }
 
-static GUI::gui_char *FindFirst(GUI::gui_char *s, GUI::gui_char c) {
-	while (*s) {
-		if (*s == c)
-			return s;
-		s++;
-	}
-	return 0;
-}
-
 bool FilePath::IsUntitled() const {
 	size_t dirEnd = fileName.rfind(pathSepChar);
 	return (dirEnd == GUI::gui_string::npos) || (!fileName[dirEnd+1]);
@@ -253,17 +244,11 @@ FilePath FilePath::Directory() const {
 	}
 }
 
-static GUI::gui_char *split(GUI::gui_char*& s, GUI::gui_char c) {
-	GUI::gui_char *t = s;
-	if (s && (s = FindFirst(s, c)) != NULL)
-		* s++ = '\0';
-	return t;
-}
-
 #ifdef _WIN32
 
 // Substitute functions that take wchar_t arguments but have the same name
-// as char functions so that teh compiler will choose the right form.
+// as char functions so that the compiler will choose the right form.
+
 static size_t strlen(const wchar_t *str) {
 	return wcslen(str);
 }
@@ -276,7 +261,11 @@ static int strcmp(const wchar_t *a, const wchar_t *b) {
 	return wcscmp(a,b);
 }
 
-static wchar_t *strrchr(wchar_t *str,wchar_t c) {
+static wchar_t *strchr(wchar_t *str, wchar_t c) {
+	return wcschr(str, c);
+}
+
+static wchar_t *strrchr(wchar_t *str, wchar_t c) {
 	return wcsrchr(str, c);
 }
 
@@ -312,9 +301,16 @@ static int stat(const wchar_t *path, struct _stat *buffer) {
 
 #endif
 
+static GUI::gui_char *split(GUI::gui_char*& s, GUI::gui_char c) {
+	GUI::gui_char *t = s;
+	if (s && (s = strchr(s, c)) != NULL)
+		* s++ = '\0';
+	return t;
+}
+
 FilePath FilePath::NormalizePath() const {
 	GUI::gui_char *path = new GUI::gui_char[fileName.length() + 1];
-	memcpy(path, AsInternal(), sizeof(GUI::gui_char) * (fileName.length() + 1));
+	strcpy(path, AsInternal());
 #ifdef WIN32
 	// Convert unix path separators to Windows
 	for (GUI::gui_char *cp = path; *cp; cp++) {
@@ -597,27 +593,28 @@ void Lowercase(GUI::gui_string &s) {
 }
 #endif
 
+static bool EndMatches(GUI::gui_string const &s, GUI::gui_string const &end) {
+	return (s.size() >= end.size()) && 
+		(std::equal(s.begin() + s.size() - end.size(), s.end(), end.begin()));
+}
+
 bool FilePath::Matches(const GUI::gui_char *pattern) const {
 	GUI::gui_string pat(pattern);
-	//pat.substitute(' ', '\0');
-	Substitute(pat, ' ', '\0');
 	GUI::gui_string nameCopy(Name().fileName);
 #ifdef _WIN32
+	Lowercase(pat);
 	Lowercase(nameCopy);
 #endif
+	std::replace(pat.begin(), pat.end(), ' ', '\0');
 	size_t start = 0;
 	while (start < pat.length()) {
 		const GUI::gui_char *patElement = pat.c_str() + start;
 		if (patElement[0] == '*') {
-			if (EndsWith(nameCopy, patElement + 1)) {
+			if (EndMatches(nameCopy, patElement + 1)) {
 				return true;
 			}
 		} else {
-			GUI::gui_string patElem(patElement);
-#ifdef _WIN32
-			Lowercase(patElem);
-#endif
-			if (nameCopy == patElem) {
+			if (nameCopy == patElement) {
 				return true;
 			}
 		}

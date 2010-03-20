@@ -19,6 +19,7 @@
 
 #include <string>
 #include <map>
+#include <algorithm>
 
 #ifdef __MINGW_H
 #define _WIN32_IE	0x0400

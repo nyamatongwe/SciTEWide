@@ -1407,7 +1407,7 @@ GtkWidget *SciTEGTK::TranslatedLabel(const char *original) {
 	GUI::gui_string text = localiser.Text(original);
 	// Don't know how to make an access key on a label transfer focus
 	// to the next widget so remove the access key indicator.
-	substitute(text, "_", "");
+	Substitute(text, "_", "");
 	return gtk_label_new(text.c_str());
 }
 
@@ -2692,7 +2692,7 @@ SString SciTEGTK::TranslatePath(const char *path) {
 		while (spath.length() > 1) {
 			SString segment(spath.c_str(), 0, end);
 			GUI::gui_string segmentLocalised = localiser.Text(segment.c_str());
-			substitute(segmentLocalised, "/", "|");
+			std::replace(segmentLocalised.begin(), segmentLocalised.end(), '/', '|');
 			spathTranslated.append("/");
 			spathTranslated.append(segmentLocalised.c_str());
 			spath.remove(0, end + 1);

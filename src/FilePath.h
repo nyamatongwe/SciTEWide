@@ -33,18 +33,6 @@ extern const GUI::gui_char fileWrite[];
 #endif
 #endif
 
-inline bool EndsWith(GUI::gui_string s, GUI::gui_string end) {
-	size_t pos = s.rfind(end);
-	return (pos != GUI::gui_string::npos) && (pos == (s.length() - end.length()));
-}
-
-inline void Substitute(GUI::gui_string &s, GUI::gui_char chFind, GUI::gui_char chReplace) {
-	for (size_t i=0; i<s.size(); i++) {
-		if (s[i] == chFind)
-			s[i] = chReplace;
-	}
-}
-
 class FilePath;
 
 class FilePathSet;

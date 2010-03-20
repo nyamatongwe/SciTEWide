@@ -1327,7 +1327,12 @@ GUI::gui_string Localization::Text(const char *s, bool retainIfNotFound) {
 	return GUI::StringFromUTF8(s);
 }
 
-int substitute(GUI::gui_string &s, const GUI::gui_string &sFind, const GUI::gui_string &sReplace) {
+bool EndsWith(GUI::gui_string const &s, GUI::gui_string const &end) {
+	return (s.size() >= end.size()) &&
+		(std::equal(s.begin() + s.size() - end.size(), s.end(), end.begin()));
+}
+
+int Substitute(GUI::gui_string &s, const GUI::gui_string &sFind, const GUI::gui_string &sReplace) {
 	int c = 0;
 	size_t lenFind = sFind.size();
 	size_t lenReplace = sReplace.size();
@@ -1343,11 +1348,11 @@ int substitute(GUI::gui_string &s, const GUI::gui_string &sFind, const GUI::gui_
 GUI::gui_string SciTEBase::LocaliseMessage(const char *s, const GUI::gui_char *param0, const GUI::gui_char *param1, const GUI::gui_char *param2) {
 	GUI::gui_string translation = localiser.Text(s);
 	if (param0)
-		substitute(translation, GUI_TEXT("^0"), param0);
+		Substitute(translation, GUI_TEXT("^0"), param0);
 	if (param1)
-		substitute(translation, GUI_TEXT("^1"), param1);
+		Substitute(translation, GUI_TEXT("^1"), param1);
 	if (param2)
-		substitute(translation, GUI_TEXT("^2"), param2);
+		Substitute(translation, GUI_TEXT("^2"), param2);
 	return translation;
 }
 

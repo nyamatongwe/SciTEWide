@@ -181,7 +181,7 @@ bool SciTEWin::OpenDialog(FilePath directory, const GUI::gui_char *filter) {
 
 	GUI::gui_string openFilter = filter;
 	if (openFilter.length()) {
-		Substitute(openFilter, '|', '\0');
+		std::replace(openFilter.begin(), openFilter.end(), '|', '\0');
 		size_t start = 0;
 		while (start < openFilter.length()) {
 			const GUI::gui_char *filterName = openFilter.c_str() + start;
@@ -287,7 +287,7 @@ FilePath SciTEWin::ChooseSaveName(FilePath directory, const char *title, const G
 bool SciTEWin::SaveAsDialog() {
 	GUI::gui_string saveFilter = GUI::StringFromUTF8(props.GetExpanded("save.filter").c_str());
 	if (saveFilter.length()) {
-		Substitute(saveFilter, '|', '\0');
+		std::replace(saveFilter.begin(), saveFilter.end(), '|', '\0');
 		size_t start = 0;
 		while (start < saveFilter.length()) {
 			const GUI::gui_char *filterName = saveFilter.c_str() + start;
