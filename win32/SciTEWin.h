@@ -18,6 +18,7 @@
 #endif
 
 #include <string>
+#include <vector>
 #include <map>
 #include <algorithm>
 
