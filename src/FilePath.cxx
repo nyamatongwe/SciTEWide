@@ -14,6 +14,7 @@
 #include <time.h>
 
 #include <string>
+#include <vector>
 #include <algorithm>
 
 #if defined(GTK)
@@ -522,10 +523,9 @@ bool FilePath::IsDirectory() const {
 #ifdef _WIN32
 void Lowercase(GUI::gui_string &s) {
 	int chars = LCMapString(LOCALE_SYSTEM_DEFAULT, LCMAP_LOWERCASE, s.c_str(), s.size()+1, NULL, 0);
-	wchar_t *sNew = new wchar_t[chars];
-	LCMapString(LOCALE_SYSTEM_DEFAULT, LCMAP_LOWERCASE, s.c_str(), s.size()+1, sNew, chars);
-	s = sNew;
-	delete []sNew;
+	std::vector<wchar_t> vc(chars);
+	LCMapString(LOCALE_SYSTEM_DEFAULT, LCMAP_LOWERCASE, s.c_str(), s.size()+1, &vc[0], chars);
+	s = &vc[0];
 }
 #endif
 

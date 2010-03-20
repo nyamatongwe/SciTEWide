@@ -9,6 +9,7 @@
 #include <time.h>
 
 #include <string>
+#include <vector>
 
 #ifdef __MINGW_H
 #define _WIN32_IE	0x0400
@@ -150,22 +151,18 @@ static size_t UTF16FromUTF8(const char *s, size_t len, gui_char *tbuf, size_t tl
 gui_string StringFromUTF8(const char *s) {
 	size_t sLen = s ? strlen(s) : 0;
 	size_t wideLen = UTF16Length(s, sLen);
-	gui_char *gs = new gui_char[wideLen + 1];
-	size_t outLen = UTF16FromUTF8(s, sLen, gs, wideLen);
-	gs[outLen] = 0;
-	gui_string ret(gs, outLen);
-	delete []gs;
-	return ret;
+	std::vector<gui_char> vgc(wideLen + 1);
+	size_t outLen = UTF16FromUTF8(s, sLen, &vgc[0], wideLen);
+	vgc[outLen] = 0;
+	return gui_string(&vgc[0], outLen);
 }
 
 std::string UTF8FromString(const gui_string &s) {
 	size_t sLen = s.size();
 	size_t narrowLen = UTF8Length(s.c_str(), sLen);
-	char *ns = new char[narrowLen + 1];
-	UTF8FromUTF16(s.c_str(), sLen, ns, narrowLen);
-	std::string ret(ns, narrowLen);
-	delete []ns;
-	return ret;
+	std::vector<char> vc(narrowLen + 1);
+	UTF8FromUTF16(s.c_str(), sLen, &vc[0], narrowLen);
+	return std::string(&vc[0], narrowLen);
 }
 
 gui_string StringFromInteger(int i) {
