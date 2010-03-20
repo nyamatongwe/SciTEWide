@@ -12,3 +12,7 @@
 *.ncb
 *.gif
 *.xslt
+*.dsw
+*.opt
+*.plg
+*.res
