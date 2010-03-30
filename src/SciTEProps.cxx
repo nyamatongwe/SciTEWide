@@ -559,6 +559,7 @@ static const char *propertiesToForward[] = {
 	"lexer.cpp.allow.dollars",
 	"lexer.d.fold.at.else",
 	"lexer.errorlist.value.separate",
+	"lexer.html.django",
 	"lexer.html.mako",
 	"lexer.metapost.comment.process",
 	"lexer.metapost.interface.default",
@@ -1325,6 +1326,11 @@ GUI::gui_string Localization::Text(const char *s, bool retainIfNotFound) {
 		return GUI::StringFromUTF8(translation.c_str());
 	}
 	return GUI::StringFromUTF8(s);
+}
+
+bool StartsWith(GUI::gui_string const &s, GUI::gui_string const &start) {
+	return (s.size() >= start.size()) &&
+		(std::equal(s.begin(), s.begin() + start.size(), start.begin()));
 }
 
 bool EndsWith(GUI::gui_string const &s, GUI::gui_string const &end) {

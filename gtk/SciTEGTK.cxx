@@ -2312,7 +2312,6 @@ gint SciTEGTK::Key(GdkEventKey *event) {
 	}
 
 	// check tools menu command shortcuts
-	// TODO: test this on GTK+ 1 and 2.
 	for (int tool_i = 0; tool_i < toolMax; ++tool_i) {
 		GtkWidget *item = gtk_item_factory_get_widget_by_action(itemFactory, IDM_TOOLS + tool_i);
 		if (item) {
@@ -3397,10 +3396,11 @@ void SciTEGTK::Run(int argc, char *argv[]) {
 #endif
 
 	// Collect the argv into one string with each argument separated by '\n'
-	SString args;
-	int arg;
-	for (arg = 1; arg < argc; arg++) {
-		args.appendwithseparator(argv[arg], '\n');
+	GUI::gui_string args;
+	for (int arg = 1; arg < argc; arg++) {
+		if (args.size() > 0)
+			args += '\n';
+		args += argv[arg];
 	}
 
 	// Process any initial switches

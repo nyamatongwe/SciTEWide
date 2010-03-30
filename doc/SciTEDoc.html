@@ -1790,6 +1790,10 @@ NameError: mistake
 	<td>For lines in the output pane that are matches from Find in Files or GCC-style diagnostics, style the path and line number separately from the rest of the line with style 21 used for the rest of the line. This allows matched text to be more easily distinguished from its location.</td>
 	</tr>
 	<tr>
+	<td>lexer.html.django</td>
+	<td>Set to 1 to enable the django template language.</td>
+	</tr>
+	<tr>
 	<td>lexer.html.mako</td>
 	<td>Set to 1 to enable the mako template language.</td>
 	</tr>
@@ -2004,7 +2008,7 @@ Prev File|IDM_PREVFILE|<br/>
       <tr>
         <td>wrap.aware.home.end.keys</td>
         <td>
-          This property changes the behavior of the home and end keys when dynamic
+          This property changes the behaviour of the home and end keys when dynamic
           line wrapping is turned on.  When set to 0 (the default), the Home and End
           keys will move the caret to the very beginning / end of the 'logical'
           line, whether or not the line is wrapped over multiple lines in the display.
@@ -2047,6 +2051,16 @@ Prev File|IDM_PREVFILE|<br/>
           first item is the default, so you may wish to change the first item to include the file
           types you commonly open.<br />
           On GTK+, this option only works for GTK+ 2.4 or later.
+        </td>
+      </tr>
+      <tr class="windowsonly">
+        <td>
+          save.filter
+        </td>
+        <td>
+          This is a complex expression used for determining the file types that will be available in
+          the save file dialog. The structure of the property is the same as open.filter.<br />
+          Does not work on GTK+.
         </td>
       </tr>
       <tr>
@@ -2150,7 +2164,7 @@ Prev File|IDM_PREVFILE|<br/>
         find.replace.regexp.posix
         </td>
         <td>
-          Change behavior of Regular expression search.
+          Change behaviour of Regular expression search.
         If set to 0 (the default), characters '(' and ')' must be escaped by '\' to behave as regexp meta characters.
         If set to 1, these characters are meta characters itself.
         </td>

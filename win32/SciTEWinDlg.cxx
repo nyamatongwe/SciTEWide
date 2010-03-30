@@ -563,9 +563,7 @@ void SciTEWin::Print(
 	footerLineHeight = tm.tmHeight + tm.tmExternalLeading;
 
 	DOCINFO di = {sizeof(DOCINFO), 0, 0, 0, 0};
-#ifdef UNICODE
 	di.lpszDocName = windowName.c_str();
-#endif
 	di.lpszOutput = 0;
 	di.lpszDatatype = 0;
 	di.fwType = 0;
@@ -1274,9 +1272,7 @@ BOOL SciTEWin::GrepMessage(HWND hDlg, UINT message, WPARAM wParam) {
 				TCHAR szDisplayName[MAX_PATH];
 				info.pszDisplayName = szDisplayName;
 				GUI::gui_string title = localiser.Text("Select a folder to search from");
-#ifdef UNICODE
 				info.lpszTitle = title.c_str();
-#endif
 				info.ulFlags = 0;
 				info.lpfn = BrowseCallbackProc;
 				GUI::gui_string directory = dlg.ItemTextG(IDDIRECTORY);
@@ -1296,9 +1292,7 @@ BOOL SciTEWin::GrepMessage(HWND hDlg, UINT message, WPARAM wParam) {
 					TCHAR szDir[MAX_PATH];
 					if (::SHGetPathFromIDList(pidl, szDir)) {
 						// Set edit control to the directory path.
-#ifdef UNICODE
 						dlg.SetItemText(IDDIRECTORY, szDir);
-#endif
 					}
 					pShellMalloc->Free(pidl);
 				}
