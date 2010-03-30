@@ -16,4 +16,5 @@
 *.opt
 *.plg
 *.res
+*.bak
 bin
