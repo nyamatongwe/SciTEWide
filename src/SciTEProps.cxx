@@ -109,7 +109,7 @@ void SciTEBase::SetLanguageMenu() {
 #endif
 			entry += GUI::StringFromUTF8(languageMenu[item].menuKey.c_str());
 		}
-		if (entry[0] != '#') {
+		if (entry.size() && entry[0] != '#') {
 			SetMenuItem(menuLanguage, item, itemID, entry.c_str());
 		}
 	}
@@ -270,7 +270,7 @@ StyleDefinition::StyleDefinition(const char *definition) :
 }
 
 bool StyleDefinition::ParseStyleDefinition(const char *definition) {
-	if (definition == 0 || *definition == '\0') {
+	if (definition == NULL || *definition == '\0') {
 		return false;
 	}
 	char *val = StringDup(definition);
@@ -798,7 +798,7 @@ void SciTEBase::ReadProperties() {
 	} else {
 		wEditor.Call(SCI_SETCARETLINEVISIBLE, 0);
 	}
-	wEditor.Call(SCI_SETCARETLINEBACKALPHA, 
+	wEditor.Call(SCI_SETCARETLINEBACKALPHA,
 		props.GetInt("caret.line.back.alpha", SC_ALPHA_NOALPHA));
 
 	SString findMark = props.Get("find.mark");
