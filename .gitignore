@@ -17,4 +17,8 @@
 *.plg
 *.res
 *.bak
+*.filters
+*.ipch
+*.sdf
+*.vcxproj
 bin
