@@ -403,6 +403,7 @@ NameError: mistake
         <li>Fortran*</li>
         <li>Forth*</li>
         <li>GAP*</li>
+        <li>Gettext</li>
         <li>Haskell</li>
         <li>HTML*</li>
         <li>HTML with embedded JavaScript, VBScript, PHP and ASP*</li>
@@ -433,6 +434,7 @@ NameError: mistake
         <li>PostScript*</li>
         <li>POV-Ray*</li>
         <li>PowerBasic*</li>
+        <li>PowerShell*</li>
         <li>PureBasic*</li>
         <li>Python*</li>
         <li>R*</li>
@@ -1791,16 +1793,16 @@ NameError: mistake
 	<td>Set to 0 to disallow the '$' character in identifiers with the cpp lexer.</td>
 	</tr>
 	<tr>
-	<td>lexer.cpp.track.preprocessor</td>
-	<td>Set to 1 to interpret #if/#else/#endif to grey out code that is not active.</td>
-	</tr>
-	<tr>
 	<td>lexer.d.fold.at.else</td>
 	<td>This option enables D folding on a "} else {" line of an if statement.</td>
 	</tr>
 	<tr>
 	<td>lexer.errorlist.value.separate</td>
 	<td>For lines in the output pane that are matches from Find in Files or GCC-style diagnostics, style the path and line number separately from the rest of the line with style 21 used for the rest of the line. This allows matched text to be more easily distinguished from its location.</td>
+	</tr>
+	<tr>
+	<td>lexer.flagship.styling.within.preprocessor</td>
+	<td>For Harbour code, determines whether all preprocessor code is styled in the preprocessor style (0) or only from the initial # to the end of the command word(1, the default). It also determines how to present text, dump, and disabled code.</td>
 	</tr>
 	<tr>
 	<td>lexer.html.django</td>
