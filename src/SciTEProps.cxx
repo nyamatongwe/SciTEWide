@@ -128,7 +128,7 @@ void SciTEBase::ReadGlobalPropFile() {
 #else
 	char **e=_environ;
 #endif
-	for (; *e; e++) {
+	for (; e && *e; e++) {
 		char key[1024];
 		char *k=*e;
 		char *v=strchr(k,'=');
@@ -559,6 +559,7 @@ static const char *propertiesToForward[] = {
 	"lexer.cpp.allow.dollars",
 	"lexer.d.fold.at.else",
 	"lexer.errorlist.value.separate",
+	"lexer.flagship.styling.within.preprocessor",
 	"lexer.html.django",
 	"lexer.html.mako",
 	"lexer.metapost.comment.process",
