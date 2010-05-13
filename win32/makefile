@@ -267,15 +267,47 @@ deps:
 $(PROG): $(OBJS)
 	$(CC) $(STRIPFLAG) -Xlinker --subsystem -Xlinker windows -o  $@ $^ $(LDFLAGS)
 
+SCINTILLAOBJSSTATIC = \
+	Accessor.o \
+	AutoComplete.o \
+	CallTip.o \
+	Catalogue.o \
+	CellBuffer.o \
+	CharacterSet.o \
+	CharClassify.o \
+	ContractionState.o \
+	Decoration.o \
+	Document.o \
+	Editor.o \
+	ExternalLexer.o \
+	KeyMap.o \
+	Indicator.o \
+	LexerBase.o \
+	LexerModule.o \
+	LexerSimple.o \
+	LineMarker.o \
+	PerLine.o \
+	PlatWin.o \
+	PositionCache.o \
+	PropSetSimple.o \
+	RESearch.o \
+	RunStyles.o \
+	ScintRes.o \
+	Selection.o \
+	Style.o \
+	StyleContext.o \
+	UniConversion.o \
+	ViewStyle.o \
+	WordList.o \
+	XPM.o
+
 OBJSSTATIC = Sc1.o SciTEWinBar.o SciTEWinDlg.o MultiplexExtension.o \
 	StyleWriter.o UniqueInstance.o SciTEBase.o FilePath.o SciTEBuffers.o \
-	SciTEIO.o Exporters.o PropSetFile.o StringList.o SciTEProps.o ScintillaWinL.o \
-	ScintillaBaseL.o Editor.o WindowAccessor.o DocumentAccessor.o KeyWords.o \
-	ExternalLexer.o StyleContext.o Lexers.a PropSet.o RunStyles.o \
-	ContractionState.o CharClassify.o Decoration.o Document.o CellBuffer.o CallTip.o Sc1Res.o PlatWin.o \
-	PositionCache.o UniConversion.o Utf8_16.o GUIWin.o KeyMap.o Indicator.o LineMarker.o RESearch.o Selection.o Style.o \
-	ViewStyle.o AutoComplete.o IFaceTable.o DirectorExtension.o MultiplexExtension.o XPM.o PerLine.o \
-	JobQueue.o WinMutex.o $(LUA_OBJS)
+	SciTEIO.o Exporters.o PropSetFile.o StringList.o SciTEProps.o \
+	Sc1Res.o Utf8_16.o GUIWin.o IFaceTable.o DirectorExtension.o MultiplexExtension.o \
+	JobQueue.o WinMutex.o \
+	ScintillaWinL.o ScintillaBaseL.o \
+	$(SCINTILLAOBJSSTATIC) Lexers.a $(LUA_OBJS)
 
 $(PROGSTATIC): $(OBJSSTATIC)
 	$(CC) $(STRIPFLAG) -Xlinker --subsystem -Xlinker windows -o $@ $^ $(LDFLAGS)
@@ -283,7 +315,7 @@ $(PROGSTATIC): $(OBJSSTATIC)
 # Automatically generate dependencies for most files with "make deps"
 include deps.mak
 
-Sc1.o: SciTEWin.cxx SciTEWin.h SciTE.h Accessor.h WindowAccessor.h KeyWords.h PropSet.h \
+Sc1.o: SciTEWin.cxx SciTEWin.h SciTE.h \
  SString.h Scintilla.h Extender.h FilePath.h SciTEBase.h JobQueue.h
 	$(CC) $(CXXFLAGS) -D STATIC_BUILD -c $< -o $@
 

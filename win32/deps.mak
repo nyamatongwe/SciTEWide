@@ -38,8 +38,8 @@ FilePath.o: ../src/FilePath.cxx ../../scintilla/include/Scintilla.h \
  ../src/GUI.h ../src/SString.h ../src/FilePath.h
 IFaceTable.o: ../src/IFaceTable.cxx ../src/IFaceTable.h
 JobQueue.o: ../src/JobQueue.cxx ../../scintilla/include/Scintilla.h \
- ../src/SString.h ../src/FilePath.h ../src/SciTE.h ../src/Mutex.h \
- ../src/JobQueue.h
+ ../src/GUI.h ../src/SString.h ../src/FilePath.h ../src/SciTE.h \
+ ../src/Mutex.h ../src/JobQueue.h
 LuaExtension.o: ../src/LuaExtension.cxx \
  ../../scintilla/include/Scintilla.h ../src/GUI.h ../src/SString.h \
  ../src/StyleWriter.h ../src/Extender.h ../src/LuaExtension.h \
